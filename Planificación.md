@@ -125,15 +125,27 @@ $$(f \cdot g)' = f' \cdot g + f \cdot g'$$
 
 # Sesión 6: 21 de Julio
 
+Profundizando sobre el concepto de la derivada, se discutieron los criterios de la primers y segunda derivada.
+
 # Sesión 7: 25 de Julio
 
+Se discutió terminología de funciones regulares y se resumieron las reglas de derivación (salvo cadena), de demostró la regla del producto.
+
 # Sesión 8: 14 de Agosto
+
+## Ejemplos
+
+Se resolvieron los siguientes problemas
+
+- Calcular la derivada de $f(x) = 3x^2 + 2x + 1$
+- Calcular la derivada de $f(x) = x + \frac{1}{x}$ y utilizar esto para probar la desigualdad
+$$x + \frac{1}{x} \geq 2$$
 
 # Sesión 9: 18 de Agosto
 
 Se cierran las ideas anteriormente discutidas sobre criterios de primera y segunda derivada con un ejemplo, que consistió en graficar la función
 
-
+$$f(x) = x^3 - 3x$$
 
 ## Tarea 4
 
