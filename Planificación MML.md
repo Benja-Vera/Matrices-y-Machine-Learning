@@ -211,4 +211,4 @@ Esto se implementó utilizando `sympy` luego de un tutorial introductorio en el 
 
 # Sesión 13: 22 de Septiembre
 
-Utilizando lo previamente discutido, se exponen y se programan en el notebook 2 los métodos de descenso y de Newton.
+Utilizando lo previamente discutido, se expone y se programa en el notebook 2 el método de descenso. Queda pendiente programar el método de Newton.
