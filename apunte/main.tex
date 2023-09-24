@@ -1,28 +1,21 @@
 \documentclass{book}
-
-\usepackage[letterpaper, rmargin=5em, lmargin=5em, textheight=63em]{geometry}
-\usepackage[utf8]{inputenc}
-\usepackage[english,spanish]{babel}
-\usepackage{fancyhdr}
-\usepackage[dvipsnames]{xcolor}
-\usepackage{amssymb}
-\usepackage{amsmath}
-\usepackage{fontawesome}
-\usepackage[unicode]{hyperref}
-\usepackage{blindtext}
-\usepackage{multicol}
-\usepackage{caption}
-\usepackage{physics}
-\usepackage{graphicx}
-
-\usepackage{subfiles}
+\input{imports.tex}
+\input{config.tex}
 
 \begin{document}
 
 \input{portada}
 \tableofcontents
 
-\chapter{Diagramas y Ecuaciones Simples}
-\subfile{1-Preliminares}
+\chapter{Introducción}
+\subfile{1-introducción.tex}
+
+\chapter{Cálculo en una Variable}
+\subfile{2-svc.tex}
+
+\chapter{Álgebra Lineal}
+\subfile{3-lineal.tex}
+
+\printbibliography
 
 \end{document}

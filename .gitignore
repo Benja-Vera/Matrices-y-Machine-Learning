@@ -14,7 +14,12 @@
 
 *.pdf
 img
+
+
 *.gz
 *.fdb_latexmk
-
 *.code-workspace
+*.run.xml
+*.bbl
+*.bcf
+*.blg
