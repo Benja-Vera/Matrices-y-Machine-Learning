@@ -1,5 +1,7 @@
 En este primer capítulo, se resumen los elementos principales del cálculo en una variable que son necesarios para desarrollar la teoría de la optimización. Los dos algoritmos principales de minimización que se exploran son el \textbf{método de descenso} y el \textbf{método de Newton}. Siendo el primero sin duda el más utilizado en el mundo del machine learning hoy en día, aunque algunos autores han sugerido utilizar variaciones del otro (ver por ejemplo \cite{optimizacion-methods-for-dl}). En la sección \ref{svc:sec:derivada} se desarrolla el concepto intuitivo de la derivada de una función, junto con un resumen de las propiedades que esperaríamos que esta cumpliera. Luego, en la sección \ref{svc:sec:reglas} hablamos más bien de cómo realmente calcular la derivada de una función, estas ideas se enlazan con la sección anterior a través de un ejemplo de cómo las primeras dos derivadas de una función se pueden utilizar para esbozar su gráfico completo, el capítulo termina con una discusión sobre la \textbf{regla de la cadena}, concepto fundamental para lo que sigue. Después de esto, la sección \ref{svc:sec:taylor} aplica lo discutido sobre la regla de la cadena para construir los llamados \textbf{polinomios de Taylor} asociados a una función, los cuales vamos interpretar como buenas aproximaciones de la función cerca de un cierto punto $x_0$. El capítulo termina en la sección \ref{svc:sec:opti}, la cual expone los dos algoritmos principales de optimización mencionados al inicio.
 
+Las ideas mencionadas en este capítulo se encuentran más detalladas, por ejemplo, en \cite{apunte-mate1}. Pero para una introducción completamente rigurosa al cálculo de una variable, se recomienda ver lo expuesto en \cite{spivak1988cálculo}
+
 \section{La derivada y sus propiedades} \label{svc:sec:derivada}
 
 \section{Las reglas de derivación} \label{svc:sec:reglas}
@@ -9,3 +11,56 @@ En este primer capítulo, se resumen los elementos principales del cálculo en u
 \section{Algoritmos de optimización} \label{svc:sec:opti}
 
 \section{Ejercicios}
+
+\subsection{Preliminares}
+
+\begin{enumerate}
+
+    \item Analice mediante una tabla, los signos de las siguientes expresiones ya factorizadas
+
+    \begin{enumerate}
+        \item $\frac{x + 1}{x - 1}$
+        \item $(x + 2)(x - 3)$
+        \item $(x + 4)(1 - x)$
+        \item $\frac{(x + 1)(x - 1)}{x-3}$
+    \end{enumerate}
+
+    \item Factorice las siguientes expresiones y luego analice sus signos como en el item anterior
+    
+    \begin{enumerate}
+        \item $\frac{x^2 - 4}{x + 1}$
+        \item $x^2 - 4x + 3$
+        \item $x^2 - 3x$
+    \end{enumerate}
+
+\end{enumerate}
+
+\subsection{Cálculo de derivadas por definición}
+
+Entre las dos definiciones de derivada que hemos visto:
+\[f'(x) = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}, \qquad f'(x) = \lim_{w \to x} \frac{f(w) - f(x)}{w - x}\]
+Utilice la que más le convenga para calcular las derivadas de las siguientes funciones
+
+\begin{enumerate}
+    \item $f(x) = \frac{1}{x}$
+    \item $f(x) = \sqrt{x}$
+    \item $f(x) = x^3$
+\end{enumerate}
+
+\subsection{Reglas de derivación sin regla de la cadena}
+
+Utilizando las reglas de derivación, calcule las derivadas de las siguientes funciones
+\begin{multicols}{2}
+    \begin{enumerate}
+        \item $f(x) = x^4$
+        \item $f(x) = 3x^5 - x^3$
+        \item $f(x) = 4x^2 - 3\pi^2$
+        \item $f(x) = (x+1)(x-1)$
+        \item $f(x) = \frac{x+1}{x-1}$
+        \item $f(x) = \frac{1}{\sqrt{x}}$
+    \end{enumerate}
+\end{multicols}
+
+\subsection{La regla de la cadena}
+
+\subsection{Polinomios de Taylor}
