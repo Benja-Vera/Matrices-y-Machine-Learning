@@ -16,7 +16,7 @@ Las ideas mencionadas en este capítulo se encuentran más detalladas, por ejemp
 
 \begin{enumerate}
 
-    \item Analice mediante una tabla, los signos de las siguientes expresiones ya factorizadas
+    \item Analice, mediante una tabla, los signos de las siguientes expresiones ya factorizadas
 
     \begin{enumerate}
         \item $\frac{x + 1}{x - 1}$
@@ -62,5 +62,63 @@ Utilizando las reglas de derivación, calcule las derivadas de las siguientes fu
 \end{multicols}
 
 \subsection{La regla de la cadena}
+
+Utilizando las reglas de derivación conocidas, además de la regla de la cadena, obtenga las derivadas de las siguientes funciones.
+\begin{multicols}{3}
+    \begin{enumerate}
+        \item $f(x) = (1 + \sqrt{x})^2$
+        \item $f(x) = \sqrt[3]{2x}$
+        \item $f(x) = (4 + 2x)^{2023}$
+        \item $f(x) = \sqrt{1 - x^2}$
+        \item $f(x) = (\frac{1}{x} + x)^3$
+        \item $f(x) = (1 - x)^5$
+    \end{enumerate}
+\end{multicols}
+
+\subsection{Problemas varios sobre rectas tangentes}
+Para esta sección, recuerde que la recta tangente al gráfico de una función $f$ en el punto $(x_0, f(x_0))$ viene dada por la ecuación
+\[y = f(x_0) + f'(x_0)(x - x_0)\]
+Además, recordemos también el hecho de que si $L_1$ y $L_2$ son dos rectas dadas respectivamente por
+\[y = m_1 x + n_1, \qquad y = m_2 x + n_2\]
+Entonces estas rectas son perpendiculares cuando $m_1 \cdot m_2 = -1$
+
+\begin{enumerate}
+    \item Considere el gráfico de la función $f(x) = \frac{1}{x}$ y sea $x_0 > 0$ fijo.
+    \begin{enumerate}
+        \item Encuentre la ecuación de la recta tangente al gráfico de $f$ en el punto $(x_0, 1/x_0)$. Debería obtener una recta cuyos parámetros vienen escritos en términos de $x_0$.
+        \item Obtenga los puntos de intersección entre la recta obtenida anteriormente y los ejes de coordenadas. Recuerde que esto se puede hacer imponiendo $x = 0$ y $y = 0$ según corresponda. Debería obtener dos puntos cuyas coordenadas vienen dadas en términos de $x_0$.
+        \item Al dibujar lo que está sucediendo, notará que se forma un triángulo (dado por la recta tangente y los ejes de coordenadas). Calcule su área ¿Qué puede decir con respecto a este área?
+    \end{enumerate}
+    \item En este problema, vamos a probar el hecho de que las rectas tangentes a los círculos son siempre perpendiculares al radio. Hecho que ya se conoce de la geometría euclideana. Recordemos para esto que la ecuación que define a una circunferencia de radio $1$ centrada en el punto $(0, 0)$ viene dada por
+    \[x^2 + y^2 = 1\]
+    De modo que depejando $y$, la función que define al semicírculo superior de esta circunferencia viene dada por
+    \[f(x) = \sqrt{1 - x^2}\]
+    Dado $x_0 \in ]-1, 1[$ fijo, proceda como sigue:
+    \begin{enumerate}
+        \item Considere el radio que une el origen con el punto $(x_0, f(x_0))$. Conociendo dos puntos, calcule la pendiente de este radio.
+        
+        \textbf{Nota:} Es posible calcular también la ecuación de la recta que define a este radio, pero no la necesitamos realmente.
+
+        \item Calcule además la derivada de la función $f$ en el punto $x_0$.
+        \item Interpretando sus resultados anteriores, concluya lo pedido.
+    \end{enumerate}
+\end{enumerate}
+
+\subsection{Máximos y mínimos}
+
+\begin{enumerate}
+    \item Pruebe, utilizando lo expuesto en este capítulo, el hecho ya conocido de que si $f(x) = ax^2 + bx + c$ es una función cuadrática cualquiera con $a \neq 0$, entonces el punto $x_0 = \frac{-b}{2a}$ corresponde a un mínimo si $a > 0$ y un máximo si $a < 0$.
+    \item Se desea encontrar el punto $P = \qty(x, \frac{1}{x})$ con $x > 0$ (construido así de modo que $P$ pertenece al gráfico de la función $f(x) = 1/x$) cuya distancia euclideana al origen de coordenadas sea mínima. Para esto, y teniendo en cuenta la siguiente figura, proceda como sigue:
+    
+    [FIGURA]
+    \begin{enumerate}
+        \item Pruebe mediante el teorema de pitágoras que para $x > 0$ fijo, la distancia viene dada por
+        \[d(x) = \sqrt{x^2 + \frac{1}{x^2}}\]
+        \item Obtenga la derivada de esta función $d'(x)$ y resuelva la ecuación $d'(x) = 0$. Llamemos $x_0$ al valor obtenido.
+        \item Con este valor en mano, calcule $d''(x_0)$ y concluya.
+    \end{enumerate}
+\end{enumerate}
+
+\subsection{Gráficos de funciones}
 
 \subsection{Polinomios de Taylor}
