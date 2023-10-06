@@ -1,0 +1,70 @@
+En el capítulo anterior dimos una visita a todas las herramientas de optimización que son comunes en el cálculo de una variable. Ahora haremos un salto a un tema completamente nuevo y aparentemente no relacionado que es el Álgebra Lineal, exploraremos brevemente la teoría de matrices y transformaciones lineales y el siguiente capítulo, sobre el cálculo y los métodos de optimización en varias variables, se encargará de enlazar estos dos círculos de ideas. Por el momento, volveremos sobre nuestro problema original para entender un poco más sobre las operaciones involucradas.
+
+\section{La necesidad de las matrices}
+
+Recordemos el esquema básico de cómo actúa una red neuronal. En la figura [LAL] se muestra cómo, a partir de una primera columna de valores percibidos por la red, estos valores se pueden combinar en forma de sumas y productos para obtener la así llamada \textit{activación} de cada neurona de la capa siguiente. En la introducción vimos que este proceso en realidad tiene más pasos, ya que hay más operaciones que se hacen a partir de esta activación obtenida. Pero ya que este proceso de multiplicar y sumar para cada neurona parece ser el más complejo, es bueno aislarlo y analizarlo más de cerca por un momento.
+
+[FIGURA]
+
+Supongamos que tenemos $n$ neuronas de entrada en la capa $L_0$ y la siguiente capa $L_1$ tiene $m$ neuronas. Para $i \in \{1, \dots, m\}$ y $j \in \{1, \dots n\}$, sea $a_j$ la activación de la neurona $j$-ésima de la capa $L_0$ y $b_i$ la activación de la neurona $i$-ésima de la capa $L_1$. Así, si $w_{ij}$ denota el peso por el que se pondera la activación $a_j$ en el cálculo de $b_i$, tenemos la fórmula
+\[b_i = w_{i1} a_1 + w_{i2} a_2 + \dots w_{in} a_n = \sum_{j=1}^n w_{ij} a_j\]
+Escribamos esta fórmula de manera un poco más extendida como sigue
+\begin{align*}
+    b_1 &= w_{11} a_1 + w_{12} a_2 + \dots w_{1n} a_n \\
+    b_2 &= w_{21} a_1 + w_{22} a_2 + \dots w_{2n} a_n \\
+    &\vdots \\
+    b_m &= w_{m1} a_1 + w_{m2} a_2 + \dots w_{mn} a_n \\
+\end{align*}
+Seguramente a primera vista, este proceso se ve bastante complejo e intimidante. Pero para entenderlo desde un mejor panorama, nos gustaría empaquetar a todas las activaciones de las capas en vectores como sigue
+\[\vec{a} = \begin{pmatrix}
+    a_1\\ \vdots \\ a_n
+\end{pmatrix} \qquad \vec{b} = \begin{pmatrix}
+    b_1\\ \vdots \\ b_n
+\end{pmatrix}\]
+Y preguntarnos por cuál es la operación que nos permite obtener el vector $\vec{b}$ a partir del vector $\vec{a}$. El sistema de ecuaciones de arriba es, por supuesto, el que describe esta operación. Pero a partir de mirarlo, vemos que la operación está completamente determinada por los $w_{ij}$. En otras palabras, si definimos el objeto
+\[W = \begin{pmatrix}
+    w_{11} & w_{12} & \dots & w_{1n} \\
+    w_{21} & w_{22} &       & w_{2n} \\
+    \vdots &        & \ddots& \vdots \\
+    w_{m1} & w_{m2} & \dots & w_{mn} \\
+\end{pmatrix}\]
+Junto con la operación $W\vec{v}$ definida para vectores $\vec{v}$ de largo $n$ y que entrega vectores de largo $m$ dada por
+\[(W\vec{v})_j = w_{j1} v_1 + w_{j2} v_2 + \dots w_{jn} v_n = \sum_{i = 1}^n w_{ji} v_i\]
+Entonces la fórmula para el vector $\vec{b}$ se puede escribir como
+\[\vec{b} = W \vec{a}\]
+Forma que sin duda suena mucho más simple de manejar que el sistema de ecuaciones que teníamos anteriormente.
+
+Introduzcamos un poco de terminología de lo que acabamos de hacer hasta el momento. Los vectores de largo $n$ con componentes reales (que son con los que casi siemore trabajamos), forman el conjunto $\R^n$ que suele recibir el nombre de \textit{espacio euclideano de $n$ dimensiones}. El objeto $W$ que acabamos de definir recibe el nombre de \textit{matriz de $m \times n$}, el conjunto de todas las cuales se denota $\R^{m \times n}$. La operación de la que vino acompañado este objeto (y que como vimos, fundamenta su existencia) se llama \textit{multiplicación vector-matriz} y constituye una función $\R^n \to \R^m$. En el caso en que $m$ o $n$ sean $1$, identificamos las matrices de $1 \times 1$ o los vectores de largo $1$ con simplemente números reales. De modo que si $A \in \R^{1 \times n}$ y $\vec{v} \in \R^n$, podemos libremente entender que $A\vec{v}$ es un número real. También en adelante nos olvidaremos de las flechas al denotar un vector, ya que resulta engorroso de escribir y muchas veces es claro a partir del contexto cuándo el símbolo $v$ se refiere a un vector y cuándo se refiere a un escalar.
+
+[LOS EJEMPLOS]
+
+[LOS EJERCICIOS]
+
+Hasta este momento, quien esté leyendo esto tiene todo el derecho del mundo a sentir que en realidad no hemos hecho nada para simplificar nuestro problema de la red neuronal. Si bien la ecuación quedó más sencilla de escribir, esto se hizo solamente a partir de definir una operación que a primera impresión podría parecer bastante compleja. Desde ese punto de vista, no hemos hecho mucho más que enmascarar el problema. El lado positivo de esto es que la máscara que hemos puesto (es decir, la multiplicación vector-matriz) es una operación muy firmemente entendida por la matemática, y lo que haremos a continuación para entenderla es estudiar sus propiedades. Antes de esto, hegamos una breve incursión en un área cercana de la matemática.
+
+\subsection{Un breve tour por el álgebra abstracta}
+
+Se le llama \textit{álgebra abstracta} a un grupo de teorías que encapsulan el estudio de los grupos, anillos, cuerpos, entre otros. No necesitamos entender lo que cada uno de esos términos significan, pero lo que todas esas áreas tienen en común es el estudio de \textit{operaciones actuando sobre conjuntos}, conjuntos de elementos que no necesitan ser números reales, sino que pueden ser otros objetos matemáticos como matrices, funciones, entre otros. Teniendo un conjunto de objetos, una operación le entrega a este conjunto una cierta noción de \textit{estructura}, en el sentido de que si combinamos dos elementos de este conjunto, obtenemos un tercero. Veamos en ese sentido cuál es la estructura de los espacios de vectores $\R^n$.
+
+Hasta este momento, hemos tratado a los vectores solamente como paquetes de números, pero sería bueno en este punto recordar que sí tenemos definidas operaciones sobre ellos. Ya que así podríamos escribir la multiplicación vector-matriz en términos de las operaciones que ya conocemos. Las dos principales que tenemos son
+\begin{enumerate}
+    \item \textbf{La suma:} Si $v, w \in \R^n$, entonces definimos $v + w$ como $(v + w)_i = v_i + w_i$. En otras palabras:
+    \[\begin{pmatrix}
+        v_1 \\ v_2 \\ \vdots \\ v_n
+    \end{pmatrix} + \begin{pmatrix}
+        w_1 \\ w_2 \\ \vdots \\ w_n
+    \end{pmatrix} = \begin{pmatrix}
+        v_1 + w_1 \\ v_2 + w_2 \\ \vdots \\ v_n + w_n
+    \end{pmatrix}\]
+    \item \textbf{La ponderación:} (también conocida como multiplicación por escalares) Si $v \in \R^n$ y $\lambda \in \R$, entonces $\lambda v$ se define como $(\lambda v)_i = \lambda v_i$. En otras palabras:
+    \[\lambda \begin{pmatrix}
+        v_1 \\ v_2 \\ \vdots \\ v_n
+    \end{pmatrix} = \begin{pmatrix}
+        \lambda v_1 \\ \lambda v_2 \\ \vdots \\ \lambda v_n
+    \end{pmatrix}\]
+\end{enumerate}
+
+Notablemente, lo que no tenemos es una noción de \textit{multiplicación} entre dos vectores\footnote{Podría pensarse que eso es por flojera de que no nos hemos dado el trabajo de definirla, y podría pensarse que $(v * w)_i = v_i \cdot w_i$ es por ejemplo una buena noción de multiplicación entre vectores, y si bien nada nos impide de definir eso, hay ciertas propiedades que le pedimos a la multiplicación, y esta operación no las cumple. De hecho, el problema es más grande de lo que parece: se puede demostrar que \textbf{No existe en $\R^n$ una operación que cumpla esas propiedades} salvo que $n$ sea una potencia de $2$, un encuentro con este hecho sirve para transmitir lo profunda que puede ser el álgebra abstracta}.
+
+\subsection{El teorema de representación matricial}
+
