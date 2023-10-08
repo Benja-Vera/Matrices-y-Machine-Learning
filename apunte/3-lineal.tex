@@ -64,7 +64,42 @@ Hasta este momento, hemos tratado a los vectores solamente como paquetes de núm
     \end{pmatrix}\]
 \end{enumerate}
 
-Notablemente, lo que no tenemos es una noción de \textit{multiplicación} entre dos vectores\footnote{Podría pensarse que eso es por flojera de que no nos hemos dado el trabajo de definirla, y podría pensarse que $(v * w)_i = v_i \cdot w_i$ es por ejemplo una buena noción de multiplicación entre vectores, y si bien nada nos impide de definir eso, hay ciertas propiedades que le pedimos a la multiplicación, y esta operación no las cumple. De hecho, el problema es más grande de lo que parece: se puede demostrar que \textbf{No existe en $\R^n$ una operación que cumpla esas propiedades} salvo que $n$ sea una potencia de $2$, un encuentro con este hecho sirve para transmitir lo profunda que puede ser el álgebra abstracta}.
+Notablemente, lo que no tenemos es una noción de \textit{multiplicación} entre dos vectores\footnote{Podría pensarse que eso es por flojera de que no nos hemos dado el trabajo de definirla, y podría pensarse que $(v * w)_i = v_i \cdot w_i$ es por ejemplo una buena noción de multiplicación entre vectores, y si bien nada nos impide de definir eso, hay ciertas propiedades que le pedimos a la multiplicación, y esta operación no las cumple. De hecho, el problema es más grande de lo que parece: se puede demostrar que \textbf{no existe en $\R^n$ una operación que cumpla esas propiedades} salvo que $n$ sea una potencia de $2$, un encuentro con este hecho sirve para transmitir lo profunda que puede ser el álgebra abstracta}. Sin embargo, utilizando solo estas dos operaciones, vemos que la multiplicación vector-matriz se puede escribir como sigue:
+
+\[Wa = \begin{pmatrix}
+    w_{11} a_1 + w_{12} a_2 + \dots w_{1n} a_n\\
+    w_{21} a_1 + w_{22} a_2 + \dots w_{2n} a_n\\
+    \vdots \\
+    w_{m1} a_1 + w_{m2} a_2 + \dots w_{mn} a_n
+\end{pmatrix} = a_1 \begin{pmatrix}
+    w_{11} \\ w_{21} \\ \vdots \\ w_{m1}
+\end{pmatrix} + a_2 \begin{pmatrix}
+    w_{12} \\ w_{22} \\ \vdots \\ w_{m2}
+\end{pmatrix} + \dots + a_n \begin{pmatrix}
+    w_{1n} \\ w_{2n} \\ \vdots \\ w_{mn}
+\end{pmatrix} = \sum_{i = 1}^n W_{\bullet i} a_i \]
+
+En que hemos definido $W_{\bullet i}$ como la $i$-ésima columna de $W$. Esta escritura del producto vector-matriz nos permite entenderlo como una suma entre diferentes ponderaciones de las columnas de la matriz, en que los ponderadores están dados por las componentes del vector $a$.
+
+Ya que estamos aquí, hablemos un poco más sobre las operaciones de suma y producto escalar en $\R^n$. Es fácil verificar que estas operaciones satisfacen las siguientes propiedades:
+\begin{itemize}
+    \item \textbf{Conmutatividad de $+$:} $\vec{u} + \vec{v} = \vec{v} + \vec{u}$
+    \item \textbf{Asociatividad de $+$:} $(vec{u} + \vec{v}) + \vec{w} = vec{u} + (\vec{v} + \vec{w})$
+    \item \textbf{Neutro de $+$:} Existe un vector $\vec{0}$ tal que para todo $v \in \R^n$ se cumple $\vec{0} + \vec{v} = \vec{v}$
+    \item \textbf{Inverso para $+$:} Para todo $\vec{v} \in \R^n$, existe un correspondiente $-\vec{v} \in \R^n$ tal que $\vec{v} + (-\vec{v}) = \vec{0}$
+    \item \textbf{Compatibilidad de $\cdot$:} $\lambda(\mu \vec{v}) = (\lambda \mu) \vec{v}$
+    \item \textbf{Distributividad de escalares:} $\lambda(\vec{v} + \vec{w}) = \lambda\vec{v} + \lambda \vec{w}$
+    \item \textbf{Distributividad de vectores:} $(\lambda + \mu)\vec{v} = \lambda \vec{v} + \mu \vec{v}$
+\end{itemize}
+
+Razonablemente, resulta que el vector $\vec{0}$ es aquel vector con solo ceros en cada componente. Y el inverso $-\vec{v}$ viene dado por $(-\vec{v})_i = -v_i$.
+
+Por mucho que lo pueda parecer, estas propiedades no están elegidas al azar, decimos que un \textbf{espacio vectorial} es un conjunto $V$ en el que consideramos dos operaciones que denotamos $+$ y $\cdot$ (a veces denotamos esto como $(V, +, \cdot)$) y en el que estas operaciones satisfacen la lista de propiedades anterior. Es decir, en demostrar que esas propiedades se cumplen para $\R^n$ con la suma y producto escalar definidas, estamos demostrando que $(\R^n, +, \cdot)$ posee la estructura de un espacio vectorial.
 
 \subsection{El teorema de representación matricial}
 
+Una buena actitud de vida en la matemática suele ser estudiar los objetos no tanto por lo que son, sino más bien a través de estudiar las \textit{buenas} funciones que los conectan. Es decir, una vez que tenemos una estructura algebraica (como la de un espacio vectorial por ejemplo), la buena cosa que podemos hacer es preguntarnos cuáles son las funciones que conectan nuestro espacio vectorial con otro \textit{preservando la estructura}. Ilustremos a qué nos referimos con preservar la estructura en este caso.
+
+Imaginemos que en un espacio vectorial $V$ tenemos dos elementos $x, y$, podemos sumar estos dos elementos para obtener uno nuevo que llamamos $z = x + y$. Esta situación está ilustrada en la figura [FIG]. Ahora, si además tenemos una función $f: V \to W$ en que $W$ es otro espacio vectorial, una función que preserva la estructura sería una en que esta misma situación se repite en $W$. En otras palabras, que si $x + y = z$, entonces $f(x) + f(y) = f(z)$. Esto se puede resumir solamente en la ecuación $f(x + y) = f(x) + f(y)$, cosa que pedimos que se cumpla para cualquier par $x, y \in V$. Pero en un espacio vectorial no solamente tenemos la estructura de la suma, también tenemos un producto por escalares. Entonces el mismo tipo de razonamiento nos diría que nuestra \textit{buena función} debería también satisfacer que para cualquier $x \in V, \lambda \in \R$, debería cumplirse que $f(\lambda x) = \lambda f(x)$. Estas dos condiciones juntas significan que la función es una \textit{buena función}. En álgebra abstracta se utiliza el término \textit{homomorfismo} para describir a este tipo de funciones, pero en el contexto específico del álgebra lineal, les llamamos \textit{funciones o transformaciones lineales}.
+
+Tenemos entonces una familia de espacios vectoriales que son los $\R^n$, y tenemos una noción de lo que significa ser una función lineal entre ellos. También tenemos estos objetos que son las matrices de $m \times n$ y vimos cómo una matriz $A \in \R^{m \times n}$ induce una función $L_A: \R^n \to \R^m$, en particular la función $L_A (x) = Ax$. Queda por supuesto preguntarnos si esta función es lineal.
