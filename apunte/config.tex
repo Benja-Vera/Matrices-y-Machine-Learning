@@ -15,6 +15,10 @@
 \newcommand{\T}{\mathcal{T}}
 \newcommand{\Z}{\mathbb{Z}}
 
+% Griego
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+
 % GEOMETRY
 \setlength{\headheight}{14pt}
 \setlength{\parskip}{1em}
@@ -44,12 +48,37 @@
     colorlinks=true,
     linkcolor=blue,
     filecolor=magenta,  
-    urlcolor=black,
+    urlcolor=magenta,
     citecolor=dGreen,
 }
 
-% Nombre de table de contenidos
+% Nombre de tabla de contenidos
 \addto\captionsspanish{
   \renewcommand{\contentsname}
     {Contenidos}
 }
+
+% Operadores
+\DeclareMathOperator{\Int}{int}
+\DeclareMathOperator{\adh}{adh}
+
+% Formato de teoremas y cositas
+\theoremstyle{definition}
+\newtheorem{definition}{Definición}[chapter]
+\theoremstyle{plain}
+\newtheorem{theorem}{Teorema}[chapter]
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposición}[chapter]
+\theoremstyle{plain}
+\newtheorem{corollary}{Corolario}[chapter]
+\theoremstyle{definition}
+\newtheorem{example}{Ejemplo}[chapter]
+\theoremstyle{plain}
+\newtheorem{lemma}{Lema}[chapter]
+\theoremstyle{remark}
+\newtheorem*{remark}{Nota}
+\theoremstyle{remark}
+\newtheorem*{question}{Pregunta}
+
+% configuración adicional de teoremas
+\renewcommand\qedsymbol{$\blacksquare$}

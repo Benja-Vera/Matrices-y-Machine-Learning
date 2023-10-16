@@ -1,0 +1,109 @@
+Este anexo está dedicado a detallar más formalmente algunos de los aspectos de cálculo en una y varias variables que para estas notas optamos por exponer de manera más superficial. Es decir, conceptos tales como lo que significa ser punto interior de un conjnuto, la definición formal de límites, la definición de continuidad y derivadas.
+
+Aquí se exponen algunas de las preguntas que podrían surgir al leer estas notas y que se aboran en este apéndice:
+\begin{itemize}
+    \item ¿Qué es lo que entendemos por $\lim_{x \to x_0} f(x)$? ¿Qué significa que esa expresión \textit{exista} o \textit{no exista}?
+    \item ¿Podemos calcular un límite de cualquier función en cualquier punto?
+    \item ¿Cuánto se pueden generalizar los conceptos de derivada y límite?
+    \item ¿Por qué este capítulo se llama \textit{consideraciones topológicas}? ¿Qué es la topología?
+\end{itemize}
+
+Los contenidos a ser tratados en este anexo son típicamente cubiertos en un curso de Análisis Real o bien en un buen curso de Cálculo, y para más información, puede consultarse el segundo capítulo de \cite{Kolmogorov}
+
+\section{En los reales}
+
+Partamos por definir y caracterizar los límites de funciones $f: A \subseteq \R \to \R$, y la buena forma de iniciar esa discusión está en primero hablar de algo que pareciera ser completamente diferente, que son las sucesiones. Estas no son estríctamente necesarias, pero a lo largo de todo el anexo nos van a aportar un segundo punto de vista sobre las cosas, uno que siempre es útil tener.
+
+\begin{definition}[sucesiones y convergencia]
+    Una sucesión de términos reales es una función $a: \N \to \R$ cualquiera. Sus términos los denotamos $a_1, a_2, \dots$ en lugar de $a(1), a(2), \dots$ por simplicidad. Decimos que $\lim_{n \to \infty} a_n = L$ si para todo $\epsilon > 0$, existe un $n_0 \in \N$ tal que para todo $n \geq n_0$, se cumple $|a_n - L| < \epsilon$. En este contexto, decimos que $a_n$ \textit{converge} o \textit{tiende} a $L$ cuando $n \to \infty$, situación que también se denota $a_n \to L$.
+\end{definition}
+
+\begin{example}
+    \begin{itemize}
+        \item La sucesión $a_n = 1/n$ tiende a $0$ cuando $n \to \infty$, hecho que se puede demostrar mediante la llamada \textit{propiedad arquimediana} de los números reales, la cual es consecuencia del axioma del supremo\footnote{Para esta demostración, ver \href{https://youtu.be/pyAIT1eZBas}{este video}.}.
+        \item La sucesión $b_n = (-1)^n$ es una para la cual ningún número real $L$ satisface la definición, de modo que decimos que el límite de $b_n$ \textit{no existe}.
+        \item La convergencia a un límite no necesita ser monótona (es decir, desde un solo lado), como ejemplo, considérese la sucesión $c_n = (-1)^n \cdot \frac{1}{n}$, que tiende a cero de manera alternante.
+    \end{itemize}
+\end{example}
+
+Teniendo estos objetos en mente, vamos a iniciar nuestra discusión de límites preguntándonos sobre en qué puntos tiene siquiera sentido preguntarnos por el límite de una función. La respuesta a esta pregunta no es inmediata, pensemos por ejemplo en una función como $f(x) = \frac{\sqrt{x}}{x - 2}$. Su dominio es $[0, \infty) - \{2\}$, y si bien estaríamos de acuerdo en que no tiene sentido evaluar el límite de esta función cuando $x \to -3$, sí tiene sentido hacernos la pregunta de qué pasa si $x \to 2$, aún si $2$ no es parte del dominio. Quisiéramos decir que sí admitimos ese punto ya que está \textit{cerca del dominio}, pero esto es algo que es necesario precisar. Hagámoslo.
+
+\begin{definition}[Adherencia]
+    Sea $A \subseteq \R$ un conjunto de números reales. Un punto $x_0 \in \R$ se dice punto adherente de $A$ si para todo $\epsilon > 0$, el intervalo\footnote{A los intervalos de este tipo es común llamarles \textit{vecindades}.} $(x_0 - \epsilon, x_0 + \epsilon)$ tiene intersección no vacía con $A$. A la colección de todos los puntos adherentes a un conjunto $A$ se le llama \textit{adherencia} de $A$ y se denota por $\adh(A)$ o bien $\overline{A}$.
+\end{definition}
+
+\begin{remark}
+    Crucialmente, el punto $x_0$ no necesita estar en $A$ para poder ser considerado un punto adherente. Pero si está en $A$, entonces automáticamente cumple con la definición y por lo tanto está en $\overline{A}$. Esto prueba que $A \subseteq \overline{A}$.
+\end{remark}
+
+\begin{example}
+    Algunos ejemplos de adherencia de un conjunto son los siguientes:
+    \begin{itemize}
+        \item $\adh((0, 1)) = [0, 1]$
+        \item $\adh((0, 2] \cup \{4\}) = [0, 2] \cup \{4\}$
+        \item $\adh(\Q) = \R$.
+    \end{itemize}
+\end{example}
+
+Veamos esta noción en términos de sucesiones con el siguiente resultado, cuya demostración queda como ejercicio.
+
+\begin{proposition}
+    \[\adh(A) = \{x \in \R : \exists (a_n) \subseteq A : a_n \to x\}\]
+    En otras palabras, la adherencia de un conjunto $A$ consiste precisamente en el conjunto de los números reales aproximables por una secuencia con términos en $A$.
+\end{proposition}
+
+\begin{remark}
+    Esto nos entrega una definición alternativa para la adherencia. Los resultados de este tipo, que nos permiten escribir nuestras nociones en términos de otros objetos (en este caso sucesiones) son de las cosas más deseables en matemáticas, ya que nos entregan nuevos puntos de vista sobre nuestros conceptos, es común que reciban el nombre de \textit{caracterizaciones}.
+\end{remark}
+
+Podríamos pensar que la adherencia es precisamente lo que buscamos. Es decir, todo punto adherente al dominio es un punto en el cual nos podemos preguntar por el límite de una función. Pero volvamos a la función que anteriormente motivó nuestro ejemplo y modifiquémosla ligeramente para dejarla de la siguiente forma
+
+\[f(x) = \begin{cases}
+    0 & x = -3\\
+    \frac{\sqrt{x}}{x - 2} & x \in [0, \infty) - \{2\}
+\end{cases}\]
+
+De este modo, agregamos un punto al dominio de nuestra función, la adherencia de este nuevo dominio es $\overline{A} = \{-3\} \cup [0, \infty)$ pero... ¿Tiene sentido realmente preguntarnos por $\lim_{x \to -3}f(x)$?
+
+La respuesta es no. Ya que al cálculo de un límite no le debería interesar lo que está sucediendo en el punto mismo, quisiéramos excluir el punto $x_0 = -3$ por estar \textit{muy lejos del dominio}, pero la adherencia no es capaz de flitrarlo, ya que es miembro del dominio. Es decir, necesitamos un concepto más restrictivo, por lo que introducimos esta definición más exigente
+
+\begin{definition}[punto de acumulación]
+    Sea $A \subseteq \R$ un conjunto de números reales. Un punto $x_0 \in \R$ se dice punto de acumulación de $A$ si para todo $\epsilon > 0$, la vecindad \textbf{perforada} $(x_0 - \epsilon, x_0 + \epsilon) - \{x_0\}$ tiene intersección no vacía con $A$. A la colección de todos los puntos de acumulación de un conjunto $A$ se le denota por $A'$.
+\end{definition}
+
+\begin{example}
+    Los puntos de acumulación de $(0, 2] \cup \{4\}$ forman el conjunto $[0, 2]$. Es decir, no existe una inclusión entre un conjunto y sus puntos de acumulación.
+\end{example}
+
+Así, la noción de punto de acumulación es precisamente la que necesitamos, ya que captura a los puntos \textit{cercanos al dominio de la función pero sin ser aislados}. Queda como ejercicio probar la siguiente caracterización.
+
+\begin{proposition}[Punto de acumulación en términos de sucesiones]
+    \[A' = \{x \in \R : \exists (a_n) \subseteq A - \{x\} : a_n \to x\}\]
+    En otras palabras, la adherencia de un conjunto $A$ consiste precisamente en el conjunto de los números reales aproximables por una secuencia \textbf{no constante} con términos en $A$.
+\end{proposition}
+
+Tenemos ahora los ingredientes que necesitamos para definir el límite de una función en un punto
+
+\begin{definition}[Límite de una función]
+    Sea $x_0$ punto de acumulación del dominio de $f: A \subseteq \R \to \R$. Decimos que $\lim_{x \to x_0}f(x) = L$ cuando $L$ cumple la condición siguiente
+    \[\forall \epsilon > 0, \exists \delta > 0, \forall x \in A: 0 < |x - x_0| < \delta \implies |f(x) - L| < \epsilon\]
+\end{definition}
+
+\begin{remark}
+    La definición recién dada (conocida como la definición $\epsilon$-$\delta$ de límites) es famosa por lo difícil que es de interpretar, y por si sola es la razón por la que esto está siendo expuesto en un apéndice y no en el contenido central del libro, por lo que se recomienda mirarla con atención y tratar de descifrar lo que está diciendo. A grandes largos, la idea está siendo que \textit{los valores que toma $f$ se parecen tanto como queramos a $L$ cuando $x$ se encuentra lo suficientemente cerca de $x_0$ sin ser igual a él}. Nótese para esto la presencia del $0$ en la expresión $0 < |x - x_0| < \delta$.
+\end{remark}
+
+Caractericemos esta noción mediante sucesiones con la siguiente proposición, cuya demostración queda como ejercicio.
+
+\begin{proposition}[Límite en términos de sucesiones]
+    Sea $x_0$ punto de acumulación del dominio de $f: A \subseteq \R \to \R$. Así, $\lim_{x \to x_0} f(x) = L$ si y solamente si para cualquier sucesión $(a_n) \subseteq A - \{x_0\}$ tal que $a_n \to x_0$, se tiene que $f(a_n) \to L$.
+\end{proposition}
+
+\begin{example}
+    Considérese la función $f: \R \to \R$ dada por
+    \[f(x) = \begin{cases}
+        0 & x \neq 0\\
+        1 & x = 0
+    \end{cases}\]
+    Demuéstrese independientemente según ambas definiciones posibles de límites que $\lim_{x \to 0} f(x) = 0$.
+\end{example}
