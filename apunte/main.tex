@@ -4,6 +4,27 @@
 
 \begin{document}
 
+% Formato de teoremas y cositas
+\theoremstyle{plain}
+\newtheorem{theorem}{Teorema}[chapter]
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definición}[chapter]
+\theoremstyle{plain}
+\newtheorem{proposition}[theorem]{Proposición}[chapter]
+\theoremstyle{plain}
+\newtheorem{corollary}[theorem]{Corolario}[chapter]
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Ejemplo}[chapter]
+\theoremstyle{plain}
+\newtheorem{lemma}[theorem]{Lema}[chapter]
+\theoremstyle{remark}
+\newtheorem*{remark}{Nota}
+\theoremstyle{remark}
+\newtheorem*{question}{Pregunta}
+
+% configuración adicional de teoremas
+\renewcommand\qedsymbol{$\blacksquare$}
+
 \input{portada}
 \tableofcontents
 
