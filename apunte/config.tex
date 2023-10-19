@@ -61,3 +61,24 @@
 % Operadores
 \DeclareMathOperator{\Int}{int}
 \DeclareMathOperator{\adh}{adh}
+
+% Formato de teoremas y cositas
+\theoremstyle{plain}
+\newtheorem{theorem}{Teorema}[chapter]
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definición}
+\theoremstyle{plain}
+\newtheorem{proposition}[theorem]{Proposición}
+\theoremstyle{plain}
+\newtheorem{corollary}[theorem]{Corolario}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Ejemplo}
+\theoremstyle{plain}
+\newtheorem{lemma}[theorem]{Lema}
+\theoremstyle{remark}
+\newtheorem*{remark}{Nota}
+\theoremstyle{remark}
+\newtheorem*{question}{Pregunta}
+
+% configuración adicional de teoremas
+\renewcommand\qedsymbol{$\blacksquare$}
