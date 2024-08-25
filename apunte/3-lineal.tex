@@ -1,146 +1,97 @@
-En el capítulo anterior dimos una visita a todas las herramientas de optimización que son comunes en el cálculo de una variable. Ahora haremos un salto a un tema completamente nuevo y aparentemente no relacionado que es el Álgebra Lineal\footnote{Existen muchos textos clásicos sobre álgebra lineal, pero el que se recomienda más seguido es \cite{HoffmanLA}}, exploraremos brevemente la teoría de matrices y transformaciones lineales y el siguiente capítulo, sobre el cálculo y los métodos de optimización en varias variables, se encargará de enlazar estos dos círculos de ideas. Por el momento, volveremos sobre nuestro problema original para entender un poco más sobre las operaciones involucradas.
+\section{Sesión 1: Introducción}
 
-\section{La necesidad de las matrices}
+Consideremos el siguiente problema ilustrativo:
 
-Recordemos el esquema básico de cómo actúa una red neuronal. En la figura [LAL] se muestra cómo, a partir de una primera columna de valores percibidos por la red, estos valores se pueden combinar en forma de sumas y productos para obtener la así llamada \textit{activación} de cada neurona de la capa siguiente. En la introducción vimos que este proceso en realidad tiene más pasos, ya que hay más operaciones que se hacen a partir de esta activación obtenida. Pero ya que este proceso de multiplicar y sumar para cada neurona parece ser el más complejo, es bueno aislarlo y analizarlo más de cerca por un momento.
+\begin{tcolorbox}[title={Problema introductorio}]
+    Sobre una línea recta se desplazan dos móviles $A$ y $B$ siendo observados por un observador $O$ ubicado entre ellos. El móvil $A$ inicia su viaje a 1 [m] de distancia hacia la derecha de $O$, y desplazándose a 1 [m/s] hacia la derecha, mientras que el movil $B$ inicia su viaje a $1$ [m] hacia la izquierda, desplazándose a 2 [m/s] hacia la derecha. Encuentre el instante y ubicación en los cuales los móviles se encuentran.
+\end{tcolorbox}
 
-[FIGURA]
-
-Supongamos que tenemos $n$ neuronas de entrada en la capa $L_0$ y la siguiente capa $L_1$ tiene $m$ neuronas. Para $i \in \{1, \dots, m\}$ y $j \in \{1, \dots n\}$, sea $a_j$ la activación de la neurona $j$-ésima de la capa $L_0$ y $b_i$ la activación de la neurona $i$-ésima de la capa $L_1$. Así, si $w_{ij}$ denota el peso por el que se pondera la activación $a_j$ en el cálculo de $b_i$, tenemos la fórmula
-\[b_i = w_{i1} a_1 + w_{i2} a_2 + \dots w_{in} a_n = \sum_{j=1}^n w_{ij} a_j\]
-Escribamos esta fórmula de manera un poco más extendida como sigue
+Para plantear matemáticamente este problema, podemos considerar las distancias hacia la derecha como \textit{positivas} y hacia la izquierda como \textit{negativas}. Estableciendo así lo que en física se conoce como un \textbf{sistema de referencia}. De este modo, las ecuaciones de movimiento de los dos móviles se pueden escribir como sigue:
 \begin{align*}
-    b_1 &= w_{11} a_1 + w_{12} a_2 + \dots w_{1n} a_n \\
-    b_2 &= w_{21} a_1 + w_{22} a_2 + \dots w_{2n} a_n \\
-    &\vdots \\
-    b_m &= w_{m1} a_1 + w_{m2} a_2 + \dots w_{mn} a_n \\
+    x_A(t) &= 1 + t \\
+    x_B(t) &= -1 + 2t \\
 \end{align*}
-Seguramente a primera vista, este proceso se ve bastante complejo e intimidante. Pero para entenderlo desde un mejor panorama, nos gustaría empaquetar a todas las activaciones de las capas en vectores como sigue
-\[\vec{a} = \begin{pmatrix}
-    a_1\\ \vdots \\ a_n
-\end{pmatrix} \qquad \vec{b} = \begin{pmatrix}
-    b_1\\ \vdots \\ b_n
-\end{pmatrix}\]
-Y preguntarnos por cuál es la operación que nos permite obtener el vector $\vec{b}$ a partir del vector $\vec{a}$. El sistema de ecuaciones de arriba es, por supuesto, el que describe esta operación. Pero a partir de mirarlo, vemos que la operación está completamente determinada por los $w_{ij}$. En otras palabras, si definimos el objeto
-\[W = \begin{pmatrix}
-    w_{11} & w_{12} & \dots & w_{1n} \\
-    w_{21} & w_{22} &       & w_{2n} \\
-    \vdots &        & \ddots& \vdots \\
-    w_{m1} & w_{m2} & \dots & w_{mn} \\
-\end{pmatrix}\]
-Junto con la operación $W\vec{v}$ definida para vectores $\vec{v}$ de largo $n$ y que entrega vectores de largo $m$ dada por
-\[(W\vec{v})_j = w_{j1} v_1 + w_{j2} v_2 + \dots w_{jn} v_n = \sum_{i = 1}^n w_{ji} v_i\]
-Entonces la fórmula para el vector $\vec{b}$ se puede escribir como
-\[\vec{b} = W \vec{a}\]
-Forma que sin duda suena mucho más simple de manejar que el sistema de ecuaciones que teníamos anteriormente. Formalicemos lo que acabamos de hacer con una pila de definiciones:
+Buscamos entonces $t^*$ tal que $x_A(t^*) = x_B(t^*) := x^*$. Estas dos incógnitas $(x^*, t^*)$ son entonces soluciones al siguiente \textbf{sistema de ecuaciones}
+\begin{align*}
+    x - t &= 1 \\
+    x - 2t &= -1 \\
+\end{align*}
 
-\begin{tcolorbox}[title={Definiciones (Espacio $\R^n$, matriz, multiplicación vector-matriz)}]
-    Los vectores de largo $n$ con componentes reales (que son con los que casi siemore trabajamos), forman el conjunto $\R^n$ que suele recibir el nombre de \textit{espacio euclideano de $n$ dimensiones}. El objeto $W$ que acabamos de definir recibe el nombre de \textit{matriz de $m \times n$}, el conjunto de todas las cuales se denota $\R^{m \times n}$. La operación de la que vino acompañado este objeto (y que como vimos, fundamenta su existencia) se llama \textit{multiplicación vector-matriz} y constituye una función $\R^n \to \R^m$. En el caso en que $m$ o $n$ sean $1$, identificamos las matrices de $1 \times 1$ o los vectores de largo $1$ con simplemente números reales. De modo que si $A \in \R^{1 \times n}$ y $\vec{v} \in \R^n$, podemos libremente entender que $A\vec{v}$ es un número real. También en adelante nos olvidaremos de las flechas al denotar un vector, ya que resulta engorroso de escribir y muchas veces es claro a partir del contexto cuándo el símbolo $v$ se refiere a un vector y cuándo se refiere a un escalar.
-\end{tcolorbox}
+Entonces, podemos definir lo siguiente:
 
-\textbf{Ejemplos:}
-
-\begin{enumerate}
-    \item $\begin{pmatrix}
-        1 & 2 \\ 0 & 1
-    \end{pmatrix} \begin{pmatrix}
-        x \\ y
-    \end{pmatrix} = \begin{pmatrix} 1 \cdot x + 2 \cdot y \\ 0 \cdot x + 1 \cdot y \end{pmatrix} = \begin{pmatrix}
-        x + 2y \\ y
-    \end{pmatrix}$
-    \item $\begin{pmatrix}
-        3 & 4
-    \end{pmatrix} \begin{pmatrix}
-        x \\ y
-    \end{pmatrix} = 3x + 4y$
-\end{enumerate}
-
-\textbf{Ejercicios:}
-
-\begin{enumerate}
-    \item Encuentre aquella matriz por la que multiplicamos el vector $\begin{pmatrix}
-        x \\ y
-    \end{pmatrix}$ para obtener el mismo vector $\begin{pmatrix}
-        x \\ y
-    \end{pmatrix}$. A esta matriz le llamamos \textit{matriz identidad}.
-    \item Encontrar la matriz que representa la siguiente operación:
-    \[ \begin{pmatrix}
-        x \\ y 
-    \end{pmatrix} \mapsto \begin{pmatrix}
-        y \\ x
-    \end{pmatrix}\]
-    \item Demuestre que
-    \[ \begin{pmatrix}
-        x & y
-    \end{pmatrix} \begin{pmatrix}
-        1 & 1 \\ 1 & 1
-    \end{pmatrix} \begin{pmatrix}
-        x \\ y
-    \end{pmatrix} = (x + y)^2\]
-\end{enumerate}
-
-\begin{tcolorbox}[title=Comentario]
-    Hasta este momento, quien esté leyendo esto tiene todo el derecho del mundo a sentir que en realidad no hemos hecho nada para simplificar nuestro problema de la red neuronal. Si bien la ecuación quedó más sencilla de escribir, esto se hizo solamente a partir de definir una operación que a primera impresión podría parecer bastante compleja. Desde ese punto de vista, no hemos hecho mucho más que enmascarar el problema. El lado positivo de esto es que la máscara que hemos puesto (es decir, la multiplicación vector-matriz) es una operación muy firmemente entendida por la matemática, y lo que haremos a continuación para entenderla es estudiar sus propiedades. Antes de esto, hegamos una breve incursión en un área cercana de la matemática.
-\end{tcolorbox}
-
-\subsection{Un breve tour por el álgebra abstracta}
-
-Se le llama \textit{álgebra abstracta}\footnote{La referencia clásica que se suele recomendar para una primera lectura sobre álgebra abstracta es \cite{dummit2003abstract}} a un grupo de teorías que encapsulan el estudio de los grupos, anillos, cuerpos, entre otros. No necesitamos entender lo que cada uno de esos términos significan, pero lo que todas esas áreas tienen en común es el estudio de \textit{operaciones actuando sobre conjuntos}, conjuntos de elementos que no necesitan ser números reales, sino que pueden ser otros objetos matemáticos como matrices, funciones, entre otros. Teniendo un conjunto de objetos, una operación le entrega a este conjunto una cierta noción de \textit{estructura}, en el sentido de que si combinamos dos elementos de este conjunto, obtenemos un tercero. Veamos en ese sentido cuál es la estructura de los espacios de vectores $\R^n$.
-
-Hasta este momento, hemos tratado a los vectores solamente como paquetes de números, pero sería bueno en este punto recordar que sí tenemos definidas operaciones sobre ellos. Ya que así podríamos escribir la multiplicación vector-matriz en términos de las operaciones que ya conocemos. Las dos principales que tenemos son
-\begin{enumerate}
-    \item \textbf{La suma:} Si $v, w \in \R^n$, entonces definimos $v + w$ como $(v + w)_i = v_i + w_i$. En otras palabras:
-    \[\begin{pmatrix}
-        v_1 \\ v_2 \\ \vdots \\ v_n
-    \end{pmatrix} + \begin{pmatrix}
-        w_1 \\ w_2 \\ \vdots \\ w_n
-    \end{pmatrix} = \begin{pmatrix}
-        v_1 + w_1 \\ v_2 + w_2 \\ \vdots \\ v_n + w_n
-    \end{pmatrix}\]
-    \item \textbf{La ponderación:} (también conocida como multiplicación por escalares) Si $v \in \R^n$ y $\lambda \in \R$, entonces $\lambda v$ se define como $(\lambda v)_i = \lambda v_i$. En otras palabras:
-    \[\lambda \begin{pmatrix}
-        v_1 \\ v_2 \\ \vdots \\ v_n
-    \end{pmatrix} = \begin{pmatrix}
-        \lambda v_1 \\ \lambda v_2 \\ \vdots \\ \lambda v_n
-    \end{pmatrix}\]
-\end{enumerate}
-
-Notablemente, lo que no tenemos es una noción de \textit{multiplicación} entre dos vectores\footnote{Podría pensarse que eso es por flojera de que no nos hemos dado el trabajo de definirla, y podría pensarse que $(v * w)_i = v_i \cdot w_i$ es por ejemplo una buena noción de multiplicación entre vectores, y si bien nada nos impide de definir eso, hay ciertas propiedades que le pedimos a la multiplicación, y esta operación no las cumple. De hecho, el problema es más grande de lo que parece: se puede demostrar que \textbf{no existe en $\R^n$ una operación que cumpla esas propiedades} salvo que $n$ sea una potencia de $2$, un encuentro con este hecho sirve para transmitir lo profunda que puede ser el álgebra abstracta}. Sin embargo, utilizando solo estas dos operaciones, vemos que la multiplicación vector-matriz se puede escribir como sigue:
-
-\[Wa = \begin{pmatrix}
-    w_{11} a_1 + w_{12} a_2 + \dots w_{1n} a_n\\
-    w_{21} a_1 + w_{22} a_2 + \dots w_{2n} a_n\\
-    \vdots \\
-    w_{m1} a_1 + w_{m2} a_2 + \dots w_{mn} a_n
-\end{pmatrix} = a_1 \begin{pmatrix}
-    w_{11} \\ w_{21} \\ \vdots \\ w_{m1}
-\end{pmatrix} + a_2 \begin{pmatrix}
-    w_{12} \\ w_{22} \\ \vdots \\ w_{m2}
-\end{pmatrix} + \dots + a_n \begin{pmatrix}
-    w_{1n} \\ w_{2n} \\ \vdots \\ w_{mn}
-\end{pmatrix} = \sum_{i = 1}^n W_{\bullet i} a_i \]
-
-En que hemos definido $W_{\bullet i}$ como la $i$-ésima columna de $W$. Esta escritura del producto vector-matriz nos permite entenderlo como una suma entre diferentes ponderaciones de las columnas de la matriz, en que los ponderadores están dados por las componentes del vector $a$.
-
-Ya que estamos aquí, hablemos un poco más sobre las operaciones de suma y producto escalar en $\R^n$. Es fácil verificar que estas operaciones satisfacen las siguientes propiedades:
+\begin{definition}[$\R^2$, igualdad, suma, ponderación, producto matriz-vector]
+Los vectores de 2 dimensiones los definimos como sigue:
 \begin{itemize}
-    \item \textbf{Conmutatividad de $+$:} $\vec{u} + \vec{v} = \vec{v} + \vec{u}$
-    \item \textbf{Asociatividad de $+$:} $(vec{u} + \vec{v}) + \vec{w} = vec{u} + (\vec{v} + \vec{w})$
-    \item \textbf{Neutro de $+$:} Existe un vector $\vec{0}$ tal que para todo $v \in \R^n$ se cumple $\vec{0} + \vec{v} = \vec{v}$
-    \item \textbf{Inverso para $+$:} Para todo $\vec{v} \in \R^n$, existe un correspondiente $-\vec{v} \in \R^n$ tal que $\vec{v} + (-\vec{v}) = \vec{0}$
-    \item \textbf{Compatibilidad de $\cdot$:} $\lambda(\mu \vec{v}) = (\lambda \mu) \vec{v}$
-    \item \textbf{Distributividad de escalares:} $\lambda(\vec{v} + \vec{w}) = \lambda\vec{v} + \lambda \vec{w}$
-    \item \textbf{Distributividad de vectores:} $(\lambda + \mu)\vec{v} = \lambda \vec{v} + \mu \vec{v}$
+\item Definimos $\R^2$ como el conjunto de los pares ordenados de números, que en adelante denotaremos verticalmente como:
+$$  \begin{pmatrix} x \\ y \end{pmatrix} \in \R^2 $$
+\item Se define la igualdad entre vectores como sigue:
+$$  \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} z \\ w \end{pmatrix} \iff (x = z) \wedge (y = w) $$
+\item Se define la suma entre vectores como:
+$$  \begin{pmatrix} x \\ y \end{pmatrix} \pm  \begin{pmatrix} z \\ w \end{pmatrix} = \begin{pmatrix} x \pm z \\ y \pm w \end{pmatrix} $$
+\item También se define el producto escalar o \textit{ponderación} de vectores como:
+$$  \lambda  \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} \lambda x \\ \lambda y \end{pmatrix}$$
+\item Y finalmente, se define el \textit{producto matriz-vector} como:
+$$  \begin{pmatrix} a & b \\ c & d \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = x \begin{pmatrix} a \\ c \end{pmatrix} + y \begin{pmatrix} b \\ d \end{pmatrix} $$
+\end{itemize}
+\end{definition}
+
+Con estas definiciones, el sistema de ecuaciones antes mencionado se puede escribir como el problema de encontrar $(x, t)$ tales que:
+
+$$  \begin{pmatrix} 1 & -1 \\ 1 & -2  \end{pmatrix} \begin{pmatrix} x \\ t \end{pmatrix} = \begin{pmatrix} 1 \\ -1  \end{pmatrix}$$
+
+Y esto se puede entender como un problema simple de \textit{text} una función. Es decir, para $f: A \to B$ e $y \in B$, encontrar $x \in A$ tal que $f(x) = y$. El vector al lado derecho juega el rol de $y$, y la matriz juega el rol de la función $f$. Esto nose lleva entonces a preguntarnos por las propiedades que puede tener la función $f(x) = Ax$ siendo $A$ una matriz y $x$ un vector. Esto será tema de la siguiente sesión.
+
+\subsection{Problemas teóricos}
+
+Antes de pasar al estudio de las propiedades del producto matriz-vector, haremos las definiciones de una manera más general. Para ello, primero comprenda las siguientes definiciones.
+
+\begin{definition}[$\R^n$, igualdad, suma, ponderación, producto matriz-vector]
+Los vectores en $n$ dimensiones los definimos como sigue:
+\begin{itemize}
+\item Definimos $\R^n$ como el conjunto de las $n$-tuplas ordenadas de números, las cuales denotaremos como:
+$$ x = \begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{pmatrix} \in  \R^n$$
+\item Definimos la igualdad entre vectores en $\R^n$ como:
+$$ x = y \iff  \forall i \in \{1, \dots, n\}: x_i = y_i $$
+\item Definimos la suma entre vectores de $\R^n$ como:
+$$ (x \pm y)_i = x_i \pm y_i $$
+\item Definimos el producto escalar o \textit{ponderación} para vectores de $\R^n$ como:
+$$ (\lambda x)_i = \lambda x_i $$
+\item Las matrices las entendemos como \textit{bloques} de números reales, que en general no serán cuadrados sino rectangulares. Estos bloques los denotaremos como:
+$$ A = \begin{pmatrix} a_{11} & \dots & a_{1n} \\ \vdots & \ddots & \vdots \\ a_{m1} & \dots & a_{mn} \end{pmatrix} \in  \R^{m \times n} $$
+Diremos que la matriz $A$ tiene $n$ columnas y $m$ filas. Las cuales frecuentemente querremos aislar y considerar como vectores en su propio mérito (ver la definición dada anteriormente para el producto matriz-vector). Por lo tanto, definiremos los vectores columna $A_{\bullet j} \in  \R^m$ para $j \in \{1, \dots, n\}$ por $(A_{\bullet j})_i = a_{ij}$. Además, definimos los vectores fila $A_{i \bullet} \in  \R^n$ para $i \in \{1, \dots, m\}$ por $(A_{i \bullet})_j = a_{ij}$. En otras palabras:
+$$ A = \begin{pmatrix} & & \\ A_{\bullet  1} & \dots & A_{\bullet n} \\ & & \end{pmatrix} = \begin{pmatrix} & A_{1  \bullet} & \\ & \vdots & \\ & A_{m \bullet} & \end{pmatrix} $$
+\item Con estas nociones, se define el producto matriz-vector para un vector $x \in  \R^n$ y una matriz $A \in  \R^{m \times n}$ por
+$$ Ax = x_1 A_{\bullet  1} + \dots + x_n A_{\bullet n} = \sum_{j = 1}^n x_j A_{\bullet j} \in  \R^m$$
+Es decir, $A \in  \R^{m \times n}$ convierte vectores de $\R^n$ en vectores de $\R^m$.
 \end{itemize}
 
-Razonablemente, resulta que el vector $\vec{0}$ es aquel vector con solo ceros en cada componente. Y el inverso $-\vec{v}$ viene dado por $(-\vec{v})_i = -v_i$.
+\end{definition}
 
-Por mucho que lo pueda parecer, estas propiedades no están elegidas al azar, decimos que un \textbf{espacio vectorial} es un conjunto $V$ en el que consideramos dos operaciones que denotamos $+$ y $\cdot$ (a veces denotamos esto como $(V, +, \cdot)$) y en el que estas operaciones satisfacen la lista de propiedades anterior. Es decir, en demostrar que esas propiedades se cumplen para $\R^n$ con la suma y producto escalar definidas, estamos demostrando que $(\R^n, +, \cdot)$ posee la estructura de un espacio vectorial.
+Para asegurar que comprendemos estas definiciones, realice los siguientes ejercicios:
 
-\subsection{El teorema de representación matricial}
+\begin{enumerate}
+    \item Considere la siguiente matriz como ejemplo
+    $$ A = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9  \end{pmatrix} $$
+    Encuentre:
+    \begin{itemize}
+        \item $a_{13}$
+        \item $a_{31}$
+        \item $a_{21}$
+        \item $a_{12}$
+        \item $A_{1  \bullet}$
+        \item $A_{\bullet  1}$
+        \item $A_{\bullet  3}$
+        \item $A_{2  \bullet}$
+    \end{itemize}
+    \item Realice el siguiente cálculo de multiplicación matriz-vector:
+    $$  \begin{pmatrix} 0 & 1 & 0 \\ 2 & 1 & 1 \\ 3 & 2 & 0  \end{pmatrix} \begin{pmatrix} 1 \\ 1 \\ 4  \end{pmatrix} $$
+    \item \textbf{(Matrices elementales)} Realice los siguientes productos:
+$$  \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1  \end{pmatrix} \begin{pmatrix} a \\b \\c\end{pmatrix}$$
+$$  \begin{pmatrix} 1 & 0 & \lambda \\ 0 & 1 & 0 \\ 0 & 0 & 1  \end{pmatrix} \begin{pmatrix} a \\ b \\ c \end{pmatrix} $$
+$$  \begin{pmatrix} 0 & 1 \\ 1 & 0  \end{pmatrix} \begin{pmatrix} a \\ b \end{pmatrix}$$
+Describa en sus palabras cómo \textit{actúa} la matriz sobre el vector en cada caso. Matrices de este tipo van a ser importantes a la hora de estudiar los sistemas de ecuaciones lineales.
+\end{enumerate}
 
-Una buena actitud de vida en la matemática suele ser estudiar los objetos no tanto por lo que son, sino más bien a través de estudiar las \textit{buenas} funciones que los conectan. Es decir, una vez que tenemos una estructura algebraica (como la de un espacio vectorial por ejemplo), la buena cosa que podemos hacer es preguntarnos cuáles son las funciones que conectan nuestro espacio vectorial con otro \textit{preservando la estructura}. Ilustremos a qué nos referimos con preservar la estructura en este caso.
+\subsection{Problemas computacionales}
 
-Imaginemos que en un espacio vectorial $V$ tenemos dos elementos $x, y$, podemos sumar estos dos elementos para obtener uno nuevo que llamamos $z = x + y$. Esta situación está ilustrada en la figura [FIG]. Ahora, si además tenemos una función $f: V \to W$ en que $W$ es otro espacio vectorial, una función que preserva la estructura sería una en que esta misma situación se repite en $W$. En otras palabras, que si $x + y = z$, entonces $f(x) + f(y) = f(z)$. Esto se puede resumir solamente en la ecuación $f(x + y) = f(x) + f(y)$, cosa que pedimos que se cumpla para cualquier par $x, y \in V$. Pero en un espacio vectorial no solamente tenemos la estructura de la suma, también tenemos un producto por escalares. Entonces el mismo tipo de razonamiento nos diría que nuestra \textit{buena función} debería también satisfacer que para cualquier $x \in V, \lambda \in \R$, debería cumplirse que $f(\lambda x) = \lambda f(x)$. Estas dos condiciones juntas significan que la función es una \textit{buena función}. En álgebra abstracta se utiliza el término \textit{homomorfismo} para describir a este tipo de funciones, pero en el contexto específico del álgebra lineal, les llamamos \textit{funciones o transformaciones lineales}.
-
-Tenemos entonces una familia de espacios vectoriales que son los $\R^n$, y tenemos una noción de lo que significa ser una función lineal entre ellos. También tenemos estos objetos que son las matrices de $m \times n$ y vimos cómo una matriz $A \in \R^{m \times n}$ induce una función $L_A: \R^n \to \R^m$, en particular la función $L_A (x) = Ax$. Queda por supuesto preguntarnos si esta función es lineal.
+Ver notebook número 4.
