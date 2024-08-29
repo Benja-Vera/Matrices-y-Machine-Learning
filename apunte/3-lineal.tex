@@ -95,3 +95,94 @@ Describa en sus palabras cómo \textit{actúa} la matriz sobre el vector en cada
 \subsection{Problemas computacionales}
 
 Ver notebook número 4.
+
+\section{Sesión 2: Linealidad} En base al experimento computacional realizado en la sesión anterior, en que pudimos visualizar con algunos ejemplos cómo las matrices \textit{actúan} sobre el espacio transformando los vectores sobre los cuales se aplican, pudimos observar que esta acción de las matrices sobre el espacio es en algún sentido \textit{uniforme}. Las observaciones geométricas que son relevantes de realizar son las siguientes:
+
+\begin{itemize}
+    \item El orígen está fijo bajo la transformación.
+    \item La transformación convierte rectas paralelas en rectas paralelas.
+    \item Las distancias entre puntos se mantienen proporcionales bajo la transformación.
+\end{itemize}
+
+Estas propiedades geométricas tienen reflejos algebráicos que se pueden resumir en la siguiente proposición.
+
+\begin{proposition}
+    Sea $A \in \R^{m \times n}$ y $x, y \in \R^n, \lambda \in \R$. Entonces, se cumple que:
+    \begin{enumerate}
+        \item $A 0 = 0 (\in \R^m)$
+        \item $A(\lambda x) = \lambda(Ax)$
+        \item $A(x + y) = Ax + Ay$
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+    Recordemos la definición de producto matriz-vector.
+    \[Ax = \sum_{i = 1}^m x_i A_{\bullet i}\]
+    De este modo:
+    \begin{enumerate}
+        \item Si $x_i = 0 \forall i \in \{1, \dots, n\}$, entonces $Ax = \sum_{i=1}^n x_i A_{\bullet i} = 0$.
+        \item $A(\lambda x) = \sum_{i=1}^n \lambda x_i A_{\bullet i} \overset{(1)}{=} \lambda \sum_{i=1}^n x_i A_{\bullet i}$
+        \item $A(x + y) = \sum_{i=1}^n (x+y)_i A_{\bullet i} = \sum_{i=1}^n (x_i + y_i)A_{\bullet i} = \sum_{i=1}^n \qty(x_i A_{\bullet i} + y_i A_{\bullet i}) \overset{(2)}{=} \sum_{i=1}^n x_i A_{\bullet i} + \sum_{i=1}^n y_i A_{\bullet i} = Ax + Ay$.
+    \end{enumerate}
+    En que se han utiliado las siguientes propiedades conocidas de las sumatorias:
+    \begin{enumerate}
+        \item[(1)] $\sum_{i=1}^n c b_i = c\sum_{i=1}^n b_i$
+        \item[(2)] $\sum_{i=1}^n (a_i + b_i) = \sum_{i=1}^n a_i + \sum_{i=1}^n b_i$
+    \end{enumerate}
+\end{proof}
+
+\begin{remark}
+    La primera propiedad $A0 = 0$ puede ser vista como una consecuencia de la segunda tomando $\lambda = 0$, por lo que las propiedades fundamentales son estas últimas dos.
+\end{remark}
+
+\begin{definition}(Linealidad)
+    Decimos que una función $f: \R^n \to \R^m$ es \textit{lineal} si cumple
+    \begin{enumerate}
+        \item $\forall x \in \R^n, \lambda \in R : f(\lambda x) = \lambda f(x)$.
+        \item $\forall x, y \in \R^n : f(x + y) = f(x) + f(y)$.
+    \end{enumerate}
+\end{definition}
+
+En particular, en vista de lo probado anteriormente, si $f: \R^n \to \R^m$ es del tipo $f(x) = Ax$ para alguna $A \in \R^{m \times n}$ dada, entonces $f$ es lineal. El hecho más interesante que vamos a explorar en esta sesión es que no existen más opciones que esta. Esto es consecuencia del conocido teorema que enunciamos a continuación.
+\begin{theorem}(Representación Matricial)
+    Si $f: \R^n \to \R^m$ es lineal, entonces existe una única $A \in \R^{m \times n}$ tal que para todo $x \in \R^n$:
+    \[f(x) = Ax\]
+\end{theorem}
+Diremos frecuentemente que esta matriz $A$ \textit{representa} a la función $f$. Algo que es aún más interesante sobre este teorema es que la matriz $A$ se puede \textit{construir}. Es decir, no es un objeto cuya existencia está garantizada pero al que no podemos acceder explícitamente, la fórmula para obtener esta matriz la veremos en la demostración a continuación.
+
+\begin{proof}
+    Para facilidad de notación, consideremos el símbolo \textit{delta de kronecker} definido por
+    \[\delta_{ij} = \begin{cases}
+        1 & i = j \\
+        0 & i \neq j
+    \end{cases}\]
+    Con esto en mente, definimos el conjunto de $n$ vectores de $\R^n$ $\{e_i\}_{i=1}^n$ que vienen definidos por $(e_i)_j = \delta_{ij}$. En otras palabras, el vector $e_i$ es aquel que tiene ceros salvo en la $i$-ésima posición en que vale $1$. Notemos que cualquier $x \in \R^n$ se puede escribir como
+    \[x = \sum_{i=1}^n x_i e_i\]
+    De este modo, si $f$ es lineal, entonces podemos desarrollar lo siguiente:
+    \[f(x) = f\qty(\sum_{i=1}^n x_i e_i) = \sum_{i=1}^n f(x_i e_i) = \sum_{i=1}^n x_i f(e_i)\]
+    Y esto puede ser visto como un producto matriz vector $Ax$ cuando (y solo cuando) definamos $A$ de modo que $A_{\bullet i} = f(e_i)$. En otras palabras, la matriz representante de $f$ tiene como columna $i$-ésima a $f(e_i)$. De este modo, se obtiene $f(x) = Ax$ y se cumple lo pedido.
+\end{proof}
+
+\begin{remark}
+    La matriz representante puede ser ilustrada del siguiente modo:
+    \[A = \begin{pmatrix} & & \\ f(e_1) & \dots & f(e_n) \\ & & \end{pmatrix}\]
+    Notar en particular que esto significa que una función lineal viene únicamente determinada (a través de su matriz representante) por sus valores en los $n$ vectores $\{f(e_i)\}_{i=1}^n$. Esto captura la \textit{uniformidad} geométrica que se observó en la sesión anterior, ya que el valor de la función en un $x$ arbitrario puede ser obtenido en base a \textit{conectar los puntos} a partir de estos $n$ vectores.
+\end{remark}
+
+\subsection{Problemas teóricos}
+
+\begin{enumerate}
+    \item Considere la función $f: \R^2 \to \R^2$ dada por
+    \[f(x, y) = (y, x)\]
+    \begin{enumerate}
+        \item Pruebe que $f$ es lineal.
+        \item Obtenga la matriz $A \in \R^{2 \times 2}$ que representa a $f$.
+    \end{enumerate}
+    \item Haga lo mismo que realizó en el item anterior, pero esta vez con la función $f: \R^n \to \R$ dada por
+    \[f(x_1, \dots , x_n) = x_1 + x_2 + \dots + x_n\]
+\end{enumerate}
+
+\subsection{Problemas computacionales}
+
+\section{Sesión 3: Operaciones matriciales}
+
