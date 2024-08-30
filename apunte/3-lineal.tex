@@ -143,7 +143,44 @@ Estas propiedades geométricas tienen reflejos algebráicos que se pueden resumi
     \end{enumerate}
 \end{definition}
 
-En particular, en vista de lo probado anteriormente, si $f: \R^n \to \R^m$ es del tipo $f(x) = Ax$ para alguna $A \in \R^{m \times n}$ dada, entonces $f$ es lineal. El hecho más interesante que vamos a explorar en esta sesión es que no existen más opciones que esta. Esto es consecuencia del conocido teorema que enunciamos a continuación.
+En particular, en vista de lo probado anteriormente, si $f: \R^n \to \R^m$ es del tipo $f(x) = Ax$ para alguna $A \in \R^{m \times n}$ dada, entonces $f$ es lineal. Ejemplos de funciones lineales son las siguientes:
+
+\begin{itemize}
+    \item $f: \R \to \R$ por $f(x) = ax$ ($a \in \R$)
+    \item $f: \R \to \R^2$ por $f(x) = \begin{pmatrix}
+        x \\ -2x
+    \end{pmatrix}$
+    \item $f: \R^2 \to \R$ por $f(x, y) = 2x + y$
+    \item $f: \R^2 \to \R^2$ por $f(x, y) = \begin{pmatrix}
+        x + y \\ x - y
+    \end{pmatrix}$
+\end{itemize}
+
+Una función no lineal es una función que no es lineal. Es decir, tal que alguna de las dos condiciones que definen la linealidad no se cumple, ya sea para algún $x \in \R^n, \lambda \in \R$ o bien para algún par $x, y \in \R^n$. Ejemplos de funciones no lineales son las siguientes:
+
+\begin{itemize}
+    \item $f: \R \to \R$ por $f(x) = x^2$
+    \item $f: \R \to \R^2$ por $f(x) = \begin{pmatrix}
+        1 \\ x
+    \end{pmatrix}$
+    \item $f: \R^2 \to \R$ por $f(x, y) = (x + y)^2$
+    \item $f: \R^2 \to \R^2$ por $f(x, y) = \begin{pmatrix}
+        x^2 - y^2 \\ 1 - x
+    \end{pmatrix}$
+\end{itemize}
+
+Obsérvese que todos los ejemplos de funciones lineales dados, si bien no los escribimos utilizando matrices, pueden ser escritos utilizándolas. Por ejemplo:
+
+\[f(x, y) = \begin{pmatrix}
+    x + y \\ x - y
+\end{pmatrix} = \begin{pmatrix}
+    1 & 1 \\ 1 & -1
+\end{pmatrix} \begin{pmatrix}
+    x \\ y
+\end{pmatrix}\]
+
+El resultado principal de esta sesión consiste en afirmar que no existe otra opción. Es decir, que la multiplicación matricial agota todas las posibles funciones lineales. Eso nos lleva al siguiente importante teorema.
+
 \begin{theorem}(Representación Matricial)
     Si $f: \R^n \to \R^m$ es lineal, entonces existe una única $A \in \R^{m \times n}$ tal que para todo $x \in \R^n$:
     \[f(x) = Ax\]
@@ -173,16 +210,133 @@ Diremos frecuentemente que esta matriz $A$ \textit{representa} a la función $f$
 
 \begin{enumerate}
     \item Considere la función $f: \R^2 \to \R^2$ dada por
-    \[f(x, y) = (y, x)\]
+    \[f(x, y) = \begin{pmatrix}
+        y \\ x
+    \end{pmatrix}\]
     \begin{enumerate}
         \item Pruebe que $f$ es lineal.
         \item Obtenga la matriz $A \in \R^{2 \times 2}$ que representa a $f$.
     \end{enumerate}
     \item Haga lo mismo que realizó en el item anterior, pero esta vez con la función $f: \R^n \to \R$ dada por
     \[f(x_1, \dots , x_n) = x_1 + x_2 + \dots + x_n\]
+    \item Consideremos $R_\theta : \R^2 \to \R^2$ tal que $R_\theta (x)$ es la rotación del vector $x$ en un ángulo $\theta$ con respecto del orígen. Se puede verificar (no lo haga, pero convénzase de que es cierto) que $\R_\theta$ es una función lineal. En consecuencia, tiene una matriz representante. Encuéntrela.
+    \todo[inline]{Agregar imagen}
 \end{enumerate}
-
-\subsection{Problemas computacionales}
 
 \section{Sesión 3: Operaciones matriciales}
 
+La sesión anterior nos ha convencido de que existe un vínculo estrecho entre las matrices y las funciones lineales (es más, son lo mismo). Concretemos un poco ese vínculo en términos de matemática abstracta. Consideremos el conjunto
+\[\L(\R^n, \R^m) = \{f : \R^n \to \R^m : f \text{ lineal}\}\]
+Y consideremos la función
+\begin{align*}
+    T : &\R^{m \times n} \to \L(\R^n, \R^m) \\
+        & A \mapsto T(A) = f_A
+\end{align*}
+En que $f_A(x) = Ax$ es la función lineal asociada a la matriz $A$.
+
+En términos que ya conocemos, el teorema de representación matricial nos dice dos cosas: Ya que la matriz representante existe, la función $T$ es \textit{epiyectiva}, y ya que es única, es \textit{inyectiva}. Entonces, la función $T$ es \textit{biyectiva} y es por lo tanto una correspondencia uno-a-uno entre las matrices y las funciones lineales. Existe entonces una \textit{función inversa} $T^{-1}: \L(\R^n, \R^m) \to \R^{m \times n}$ tal que $T^{-1}(f) = A$ tal que $T(A) = f$. Esta función inversa es precisamente la fórmula que dimos para la matriz representante. En rigor, aquí no hemos dicho nada nuevo, ya que todo el contenido está en el teorema de representación, pero es importante de todos modos darle un sentido a los términos comunes de funciones inversas.
+
+Recordemos que sobre las funciones lineales (y en realidad sobre todas las funciones) tenemos las siguientes operaciones definidas.
+
+\begin{definition} (Suma, resta, producto escalar, composición)
+    Sean $f, g: \R^n \to \R^m$ lineales y $\lambda \in \R$. Entonces:
+    \begin{enumerate}
+        \item Definimos la suma y resta $f \pm g: \R^n \to \R^m$ por
+        \[(f \pm g)(x) = f(x) \pm g(x)\]
+        \item Definimos la ponderación escalar $\lambda f : \R^n \to \R^m$ por
+        \[(\lambda f)(x) = \lambda f(x)\]
+        \item Si $f: \R^n \to \R^m$ y $g: \R^m \to \R^p$ lineales, entonces definimos $g \circ f : \R^n \to \R^m$ por
+        \[(g \circ f) (x) = g(f(x))\]
+    \end{enumerate}
+\end{definition}
+
+Algo interesante de la linealidad es que se preserva a través de estas definiciones. Es decir, tenemos la siguiente proposición:
+
+\begin{proposition} \label{prop:function-linearity}
+    La suma, resta, ponderación y composición de funciones lineales es una función lineal.
+\end{proposition}
+
+\begin{proof}
+    Queda propuesta como ejercicio.
+\end{proof}
+
+Esto significa que el conjunto $\L(\R^n, \R^m)$ tiene estructura, tiene operaciones definidas sobre sus elementos. Por lo tanto, podemos \textit{trasladar} estas operaciones hacia las matrices. Por ejemplo, nos gustaría definir el objeto $A + B$ siendo $A, B$ matrices. Y nos gustaría que esta suma tuviera alguna relación con la suma de las funciones $f_A + f_B$ asociadas. Esta función suma es lineal por la última proposición. En consecuencia, tiene una matriz representante. Nos gustaría definir esta como la \textit{suma entre las matrices} $A$ y $B$. De este modo, se cumpliría que \textit{la matriz representante de la suma es la suma de las matrices representantes}. Ya que esta suma de funciones $f_A + f_B$ solo se puede hacer si ambas tiene la forma $\R^n \to \R^m$, entonces la suma solo se puede definir para matrices de iguales tamaños.
+
+Repitamos lo mismo esta vez con la composición: Sean $A, B$ matrices (de tamaños que vamos a descubrir prontamente). Estas dos tienen asociadas funciones $f_A$ y $f_B$ lineales, las cuales se pueden componer formando $f_A \circ f_B$. Esta composición solo tiene sentido si $f_B : \R^n \to \R^m$ y $f_A: \R^m \to \R^p$, de modo que necesitamos $B \in \R^{m \times n}$ y $A \in \R^{p \times m}$. Y definimos el \textit{producto matricial} entre las matrices $A$ y $B$ (denotado como $AB$) como aquella matriz que representa a la función lineal $f_A \circ f_B$.
+
+Esto nos entrega la siguiente definición:
+
+\begin{definition}(suma, resta, ponderación, producto de matrices)
+    Para $A, B \in \R^{m \times n}$ y $\lambda \in \R$, definimos
+    \begin{itemize}
+        \item $A \pm B \in \R^{m \times n}$ como la matriz representante de la función lineal $f_A \pm f_B$.
+        \item $\lambda A \in \R^{m \times n}$ como la matriz representante de la función $\lambda f_A$.
+        \item Para $A \in \R^{m \times p}, B \in \R^{p \times n}$, definimos $AB \in \R^{m \times n}$ como la matriz representante de la función $f_A \circ f_B$.
+    \end{itemize}
+\end{definition}
+
+Esta definición es natural desde un punto de vista teórico, pero altamente poco amigable. Ya que no nos deja calcular explícitamente ninguna de estas operaciones sin pasar por pensar en funciones y matrices representantes. Por suerte, las podemos explicitar fácilmente utilizando las fórmulas que hemos obtenido hasta el momento. Observar, por ejemplo para la suma y la ponderación, que en términos de la función $T$ introducida al inicio de la sesión, estamos definiendo\footnote{Esto esconde grandes cosas. Aplicando $T$ a ambos lados, lo que se observa es que estamos definiendo las operaciones para que se cumpla
+\begin{align*}
+    T(A + B) = T(A) + T(B) \\
+    T(\lambda A) = \lambda T(A)
+\end{align*}
+Es decir, las operaciones se introducen de modo que la biyección en sí misma $T$ sea \textit{lineal}. A las funciones lineales biyectivas les llamamos \textit{isomorfismos}, y esto permite frasear lo que hemos estado haciendo de la siguiente forma: Estamos dando a $\R^{m \times n}$ la misma estructura algebraica presente en el espacio de funciones $\L(\R^n, \R^m)$ ya que el teorema de representación matricial nos decía que estaban en correspondencia uno a uno.
+}
+\begin{align*}
+    A + B = T^{-1}(T(A) + T(B)) \\
+    \lambda A = T^{-1}(\lambda T(A))
+\end{align*}
+De modo que aplicando la fórmula para la matriz representante, tenemos entonces que
+\[A + B = \begin{pmatrix} & & \\ (f_A + f_B)(e_1) & \dots & (f_A + f_B)(e_n) \\ & & \end{pmatrix} = \begin{pmatrix} & & \\ f_A(e_1) + f_B(e_1) & \dots & f_A(e_n) + f_B(e_n) \\ & & \end{pmatrix}\]
+\[= \begin{pmatrix} & & \\ A e_1 + B_{e_1} & \dots & A e_n + B e_n \\ & & \end{pmatrix} = \begin{pmatrix} & & \\ A_{\bullet 1} + B_{\bullet 1} & \dots & A_{\bullet n} + B_{\bullet n} \\ & & \end{pmatrix}\]
+En términos de cada una de las entradas, esto se ve mucho más simplemente como
+\[(A + B)_{ij} = A_{ij} + B_{ij}\]
+Similarmente, se puede ver que
+\[(\lambda A)_{ij} = \lambda A_{ij}\]
+Podríamos comenzar a pensar que todo este asunto de pasar por matemática abstracta y definir a través de matrices representantes fue una pérdida de tiempo solo para definir cosas que de todos modos eran intuitivas, pero ahora consideremos el producto matricial.
+
+De acuerdo a la definición, tenemos entonces
+\[AB = \begin{pmatrix} & & \\ (f_A \circ f_B)(e_1) & \dots & (f_A \circ f_B)(e_n) \\ & & \end{pmatrix} = \begin{pmatrix} & & \\ f_A(f_B(e_1)) & \dots & f_A(f_B(e_n)) \\ & & \end{pmatrix}\]
+\[= \begin{pmatrix} & & \\ f_A(B_{\bullet 1}) & \dots & f_A(B_{\bullet n}) \\ & & \end{pmatrix} = \begin{pmatrix} & & \\ AB_{\bullet 1} & \dots & A B_{\bullet n} \\ & & \end{pmatrix}\]
+En otras palabras, la columna $j$-ésima del producto $AB$ es la matriz $A$ aplicada sobre el vector columna $j$-ésimo de $B$. Explícitamente:
+\[(AB)_{\bullet j} = \sum_{k = 1}^{p} B_{kj} A_{\bullet k}\]
+Y en términos de las entradas individuales,
+\[(AB)_{ij} = \sum_{k=1}^p A_{ik} B_{kj}\]
+Esta fórmula es la más conocida para el producto matricial y definitivamente no es la primera que se nos hubiese ocurrido al definirlo. Lo común en los cursos de álgebra lineal es comenzar dando estas definiciones y luego probar que \textit{mágicamente} se cumplen las cosas que ya hemos explorado (y otras propiedades que veremos más adelante), pero el camino más transparente es el que hemos hecho, en que las definiciones están al servicio de que se cumplan las propiedades.
+
+En la siguiente sesión exploraremos el concepto de una \textit{matriz inversa} y con ello comenzaremos nuestro camino hacia el problema original de despejar $x$ en la ecuación $Ax = b$, camino que llamaremos el de \textit{invertir} una matriz $A$.
+
+\subsection{Problemas teóricos}
+
+\begin{enumerate}
+    \item Demuestre, la proposición \ref{prop:function-linearity}.
+    \item Realice los siguientes productos matriciales
+        \[1\]
+        \[2\]
+        \[3\]
+        Deduzca de los últimos dos que el producto matricial no es conmutativo.
+    \item Encuentre dos matrices $A, B \in \R^{2 \times 2}$ no nulas tales que $AB = 0$.
+    
+    A lo largo de estos siguientes problemas, vamos a utilizar nuestros resultados abstractos para demostrar de manera breve propiedades aritméticas de matrices que no son obvias y cuyas demostraciones a partir de las definiciones tradicionales resultan engorrosas, técnicas y no muy iluminadoras.
+    \item Sean $f, g : \R^p \to \R^m$ y $h: \R^n \to \R^p$ funciones lineales. Pruebe que se cumple
+    \[(f + g) \circ h = (f \circ h) + (g \circ h)\]
+    \item  Sean $f, g : \R^n \to \R^p$ y $h: \R^p \to \R^m$ funciones lineales. Pruebe que se cumple
+    \[h \circ(f + g) = (h \circ f) + (h \circ g)\]
+
+    \begin{remark}
+        Luego de hacer las demostraciones, notará que la linealidad solo se utiliza en el segundo problema y sobre $h$. Es decir, estas igualdades se cumplen en un contexto de funciones más general que aquel en el que todo es lineal. Esto es interesante, pero en este contexto solo lo utilizaremos para funciones lineales, por lo que el enunciado tiene supuestos más restrictivos.
+    \end{remark}
+    \item Deduzca de los problemas anteriores que las siguientes identidades matriciales se cumplen
+    \[A(B + C) = AB + AC\]
+    \[(A + B)C = AC + BC\]
+    Siendo $A, B, C$ matrices de los tamaños que correspondan.
+
+    \item Pruebe que el producto de matrices es \textit{asociativo}. Es decir,
+    \[(AB)C = A(BC)\]
+    Para ello, recuerde que la composición de funciones es evidentemente asociativa (¿Por qué es evidente?).
+    \begin{remark}
+        Solo para comparar, si hubiésemos hecho esta última demostración utilizando la fórmula clásica del producto matricial, hubieramos tenido que probar la siguiente identidad de sumatorias dobles:
+        \[\sum_{k=1}^m C_{kj}\qty(\sum_{l=1}^p A_{il}B_{lk}) = \sum_{l=1}^p A_{il} \qty(\sum_{k=1}^m B_{lk}C_{kj})\]
+    \end{remark}
+
+\end{enumerate}
